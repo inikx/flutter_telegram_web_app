@@ -2,11 +2,12 @@ part of '../../../telegram_web_app.dart';
 
 class TelegramInitData {
   final TelegramUser user;
-  final int? chatInstance;
+  final String? chatInstance;
   final String? chatType;
   final String? queryId;
   final int authDate;
   final String hash;
+  final String? startParam;
   final String raw;
 
   TelegramInitData({
@@ -16,30 +17,33 @@ class TelegramInitData {
     required this.queryId,
     required this.authDate,
     required this.hash,
+    this.startParam,
     required this.raw,
   });
 
   factory TelegramInitData.fromRawString(String data) {
-    Map<String, String?> validationData = DataParser.parseAmpersandSeparatedData(data);
+    Map<String, String?> validationData =
+        DataParser.parseAmpersandSeparatedData(data);
 
     // Parse user URI json string into Dart Map
-    Map<String, dynamic> userData = jsonDecode(Uri.decodeFull(validationData['user']!));
+    Map<String, dynamic> userData =
+        jsonDecode(Uri.decodeFull(validationData['user']!));
 
     TelegramUser user = TelegramUser(
       id: userData['id'],
       firstname: userData['first_name'],
-      lastname:
-          ((userData['last_name'] as String?)?.isNotEmpty ?? false) ? userData['last_name'] : null,
+      lastname: ((userData['last_name'] as String?)?.isNotEmpty ?? false)
+          ? userData['last_name']
+          : null,
       username: userData['username'],
       languageCode: userData['language_code'],
       allowsWriteToPm: userData['allows_write_to_pm'],
     );
 
-    int? chatInstance = validationData['chat_instance']?.isNotEmpty ?? false
-        ? int.parse(validationData['chat_instance']!)
-        : null;
+    String? chatInstance = validationData['chat_instance'];
     String? chatType = validationData['chat_type'];
     String? queryId = validationData['query_id'];
+    String? startParam = validationData['start_param'];
 
     int authDate = int.parse(validationData['auth_date']!);
     String hash = validationData['hash']!;
@@ -51,6 +55,7 @@ class TelegramInitData {
       chatType: chatType,
       authDate: authDate,
       hash: hash,
+      startParam: startParam,
       raw: data,
     );
   }
@@ -67,7 +72,7 @@ class TelegramInitData {
 
     return TelegramInitData(
       user: user,
-      chatInstance: 23423423424243,
+      chatInstance: '23423423424243',
       queryId: null,
       chatType: 'private',
       authDate: 1711523754,
