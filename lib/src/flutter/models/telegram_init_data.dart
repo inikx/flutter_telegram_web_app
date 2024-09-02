@@ -95,7 +95,8 @@ class TelegramInitData {
           queryId == other.queryId &&
           authDate == other.authDate &&
           hash == other.hash &&
-          raw == other.raw;
+          raw == other.raw &&
+          startParam == other.startParam;
 
   @override
   int get hashCode =>
@@ -105,7 +106,8 @@ class TelegramInitData {
       queryId.hashCode ^
       authDate.hashCode ^
       hash.hashCode ^
-      raw.hashCode;
+      raw.hashCode ^
+      startParam.hashCode;
 
   @override
   String toString() {
@@ -115,6 +117,7 @@ class TelegramInitData {
         'chatType: $chatType, '
         'queryId: $queryId, '
         'authDate: $authDate, '
+        'startParam: $startParam'
         'hash: $hash, '
         'raw: $raw}';
   }
