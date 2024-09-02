@@ -22,6 +22,9 @@ class TelegramInitData {
   });
 
   factory TelegramInitData.fromRawString(String data) {
+    if (data.isEmpty) {
+      throw Exception('Data is empty');
+    }
     Map<String, String?> validationData =
         DataParser.parseAmpersandSeparatedData(data);
 
