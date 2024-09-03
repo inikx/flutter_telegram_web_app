@@ -130,6 +130,7 @@ class TelegramUser {
   final String? username;
   final String? languageCode;
   final bool? allowsWriteToPm;
+  final String? photoUrl;
 
   TelegramUser({
     required this.id,
@@ -138,6 +139,7 @@ class TelegramUser {
     required this.username,
     required this.languageCode,
     required this.allowsWriteToPm,
+    this.photoUrl,
   });
 
   @override
@@ -149,6 +151,7 @@ class TelegramUser {
         "username: $username, "
         "languageCode: $languageCode, "
         "allowsWriteToPm: $allowsWriteToPm"
+        "photoUrl: $photoUrl"
         "}";
   }
 
@@ -162,7 +165,8 @@ class TelegramUser {
           lastname == other.lastname &&
           username == other.username &&
           languageCode == other.languageCode &&
-          allowsWriteToPm == other.allowsWriteToPm;
+          allowsWriteToPm == other.allowsWriteToPm &&
+          photoUrl == other.photoUrl;
 
   @override
   int get hashCode =>
@@ -171,5 +175,6 @@ class TelegramUser {
       lastname.hashCode ^
       username.hashCode ^
       languageCode.hashCode ^
-      allowsWriteToPm.hashCode;
+      allowsWriteToPm.hashCode ^
+      photoUrl.hashCode;
 }
