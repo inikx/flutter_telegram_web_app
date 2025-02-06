@@ -1,25 +1,18 @@
 name: telegram_web_app
 description: "Representation and implementation of telegram web/mini apps apis"
-version: 0.1.6
+version: 0.3.3
 repository: https://github.com/khamidjon-khamidov/flutter_telegram_web_app
 homepage: https://github.com/khamidjon-khamidov/flutter_telegram_web_app
 
 environment:
   sdk: '>=3.3.0 <4.0.0'
-  flutter: ">=1.20.0"
+  flutter: ">=3.22.0"
 
 dependencies:
   flutter:
     sdk: flutter
-  js: ^0.7.1
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^3.0.0
-
-
-flutter:
-  plugin:
-    platforms:
-      web:

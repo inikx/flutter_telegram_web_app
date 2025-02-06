@@ -11,18 +11,22 @@ class TelegramWebAppFake extends TelegramWebApp {
   WebAppInitData? get initDataUnsafe => null;
 
   @override
-  String get version => '7.0';
+  String get version => '8.0';
 
   @override
   String get platform => 'android';
 
   @override
   TelegramColorScheme get colorScheme => TelegramColorScheme.dark;
+
   @override
   ThemeParams get themeParams => MockThemeParams();
 
   @override
   bool get isExpanded => true;
+
+  @override
+  bool get isActive => true;
 
   @override
   double? get viewportHeight => 548.0;
@@ -37,13 +41,37 @@ class TelegramWebAppFake extends TelegramWebApp {
   Color? get backgroundColor => const Color(0xff18222d);
 
   @override
+  Color? get bottomBarColor => const Color(0xff18222d);
+
+  @override
   bool get isClosingConfirmationEnabled => true;
+
+  @override
+  bool get isVerticalSwipesEnabled => true;
+
+  @override
+  bool get isFullscreen => false;
+
+  @override
+  bool get isOrientationLocked => false;
+
+  @override
+  DeviceOrientation get deviceOrientation => DeviceOrientation.instance;
+
+  @override
+  SafeAreaInset get safeAreaInset => throw UnimplementedError();
+
+  @override
+  ContentSafeAreaInset get contentSafeAreaInset => throw UnimplementedError();
 
   @override
   BackButton get backButton => BackButton.instance;
 
   @override
-  MainButton get mainButton => MainButton.instance;
+  BottomButton get mainButton => MockBottomButton();
+
+  @override
+  BottomButton get secondaryButton => MockBottomButton();
 
   @override
   SettingsButton get settingButton => SettingsButton.instance;
@@ -55,88 +83,157 @@ class TelegramWebAppFake extends TelegramWebApp {
   CloudStorage get cloudStorage => CloudStorage.instance;
 
   @override
+  Accelerometer get accelerometer => Accelerometer.instance;
+
+  @override
   BiometricManager get biometricManager => throw UnimplementedError();
 
   @override
-  Future<bool> isVersionAtLeast(String version) async => true;
+  LocationManager get locationManager => LocationManager.instance;
 
   @override
-  Future<void> setHeaderColor(Color color) async {}
+  Gyroscope get gyroscope => Gyroscope.instance;
 
   @override
-  Future<void> setBackgroundColor(Color color) async {}
+  bool isVersionAtLeast(String version) => true;
 
   @override
-  Future<void> enableClosingConfirmation() async {}
+  void setHeaderColor(Color color) {}
 
   @override
-  Future<void> disableClosingConfirmation() async {}
+  void setBackgroundColor(Color color) {}
 
   @override
-  void onEvent(TelegramEvent event) async {}
-  @override
-  void offEvent(TelegramEvent event) async {}
-  @override
-  Future<void> sendData(String data) async {}
+  void setBottomBarColor(Color color) {}
 
   @override
-  Future<void> switchInlineQuery(String query, [ChatType? chatType]) async {}
+  void enableClosingConfirmation() {}
+
   @override
-  Future<void> openLink(String url, {bool tryInstantView = true}) async {
+  void disableClosingConfirmation() {}
+
+  @override
+  void onEvent(TelegramEvent event) {}
+
+  @override
+  void offEvent(TelegramEvent event) {}
+
+  @override
+  void sendData(String data) {}
+
+  @override
+  void switchInlineQuery(String query, [List<ChatType>? chatTypes]) {}
+
+  @override
+  void openLink(String url, {bool tryInstantView = true}) {
     print("Mocked open link for $url, tryInstantView: $tryInstantView");
   }
 
   @override
-  Future<void> openTelegramLink(String url) async {}
+  void openTelegramLink(String url) {}
 
   @override
-  Future<void> openInvoice(String url, [Function(dynamic)? onInvoiceStatus]) async {}
+  void openInvoice(String url, [void Function(InvoiceStatus status)? onInvoiceStatus]) {}
 
   @override
-  Future<void> shareToStory(String mediaUrl, {StoryShareParams? params}) async {}
+  void shareToStory(String mediaUrl, {StoryShareParams? params}) {}
 
   @override
-  Future<void> showPopup({
+  void showPopup({
     String? title,
     required String message,
     List<PopupButton>? buttons,
     required Function(String id) callback,
-  }) async {}
+  }) {}
 
   @override
-  Future<void> showAlert(String message, [Function()? callback]) async {}
+  void showAlert(String message, [Function()? callback]) {}
 
   @override
-  Future<void> showConfirm(String message, [void Function(bool isOkPressed)? callback]) async {}
+  void showConfirm(String message, [void Function(bool isOkPressed)? callback]) {}
 
   @override
-  Future<void> showScanQrPopup(String? infoTitle, [bool Function(String result)? callback]) async {}
+  void showScanQrPopup(String? infoTitle, [bool Function(String result)? callback]) {}
 
   @override
-  Future<void> closeScanQrPopup() async {}
+  void closeScanQrPopup() {}
 
   @override
-  Future<void> readTextFromClipboard([void Function(String clipboardText)? onRead]) async {}
+  void readTextFromClipboard([void Function(String clipboardText)? onRead]) {}
 
   @override
-  Future<void> requestWriteAccess({required Function(bool granted) onResult}) async {}
+  void requestWriteAccess({required Function(bool granted) onResult}) {}
 
   @override
-  Future<void> requestContact([void Function(bool granted)? onResult]) async {}
+  void requestContact([void Function(bool granted)? onResult]) {}
 
   @override
-  Future<void> ready() async {}
+  void ready() {}
 
   @override
-  Future<void> expand() async {}
+  void expand() {}
 
   @override
-  Future<void> close() async {}
+  void close() {}
 
   @override
-  Future<void> disableVerticalSwipes() async {}
+  void disableVerticalSwipes() {}
+
   @override
-  Future<void> enableVerticalSwipes() async {}
+  void enableVerticalSwipes() {}
+
   @override
-  bool get isVerticalSwipesEnabled => true;
+  void requestFullscreen() {
+    print("Mocked requestFullscreen");
+  }
+
+  @override
+  void exitFullscreen() {
+    print("Mocked exitFullscreen");
+  }
+
+  @override
+  void lockOrientation() {
+    print("Mocked lockOrientation");
+  }
+
+  @override
+  void unlockOrientation() {
+    print("Mocked unlockOrientation");
+  }
+
+  @override
+  void addToHomeScreen() {
+    print("Mocked addToHomeScreen");
+  }
+
+  @override
+  Future<String> checkHomeScreenStatus() async {
+    print("Mocked checkHomeScreenStatus");
+    return "unknown";
+  }
+
+  @override
+  Future<bool> downloadFile(String url, String filename) async {
+    print("Mocked downloadFile");
+    return false;
+  }
+
+  @override
+  Future<bool> shareMessage(String messageId) async {
+    print("Mocked shareMessage");
+    return false;
+  }
+
+  @override
+  Future<bool> setEmojiStatus(String customEmojiId, {EmojiStatusParams? params}) async {
+    print("Mocked setEmojiStatus");
+    return false;
+  }
+  
+  @override
+  Future<bool> requestEmojiStatusAccess() async {
+    print("Mocked requestEmojiStatusAccess");
+    return false;
+  }
 }

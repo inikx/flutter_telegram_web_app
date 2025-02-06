@@ -1,11 +1,22 @@
 import 'package:example/components/color_picker_dialog.dart';
-import 'package:example/screens/buttons/back_button_screen.dart';
-import 'package:example/screens/buttons/main_button_screen.dart';
-import 'package:example/screens/buttons/settings_button_screen.dart';
-import 'package:example/screens/other/biometric_manager_screen.dart';
-import 'package:example/screens/other/cloud_storage_screen.dart';
-import 'package:example/screens/other/share_to_story_screen.dart';
+import 'package:example/screens/screens/accelerometer_screen.dart';
+import 'package:example/screens/screens/add_to_home_screen.dart';
+import 'package:example/screens/screens/back_button_screen.dart';
+import 'package:example/screens/screens/biometric_manager_screen.dart';
+import 'package:example/screens/screens/cloud_storage_screen.dart';
+import 'package:example/screens/screens/emoji_status_screen.dart';
+import 'package:example/screens/screens/file_download_screen.dart';
+import 'package:example/screens/screens/fullscreen_screen.dart';
+import 'package:example/screens/screens/gyroscope_screen.dart';
+import 'package:example/screens/screens/location_manager_screen.dart';
+import 'package:example/screens/screens/main_button_screen.dart';
+import 'package:example/screens/screens/orientation_screen.dart';
+import 'package:example/screens/screens/settings_button_screen.dart';
+import 'package:example/screens/screens/share_message_screen.dart';
+import 'package:example/screens/screens/share_to_story_screen.dart';
+import 'package:example/screens/util/app_bar_ext.dart';
 import 'package:example/screens/util/string_snackbar_extension.dart';
+import 'package:example/screens/widget/tele_appbar.dart';
 import 'package:example/widgets/expandable_tile.dart';
 import 'package:example/widgets/expandable_tile_with_widget.dart';
 import 'package:example/widgets/list_button.dart';
@@ -14,7 +25,7 @@ import 'package:flutter/material.dart';
 import 'package:telegram_web_app/telegram_web_app.dart';
 
 import '../widgets/theme_params_widget.dart';
-import 'other/haptic_feedback_screen.dart';
+import 'screens/haptic_feedback_screen.dart';
 
 // ignore_for_file: use_build_context_synchronously
 class MainScreen extends StatefulWidget {
@@ -33,19 +44,19 @@ class _MainScreenState extends State<MainScreen> {
   @override
   void initState() {
     super.initState();
-    FlutterError.onError = (details) {
-      showSnackbar("Flutter error: $details");
-      print("Flutter error happened: $details");
-    };
 
-    TelegramWebApp.instance.ready();
-
+    telegram.onEvent(SafeAreaChangedEvent(onInsetChanged));
+    telegram.onEvent(ContentSafeAreaChangedEvent(onInsetChanged));
     check();
   }
 
   void check() async {
     await Future.delayed(const Duration(seconds: 2));
-    isDefinedVersion = await telegram.isVersionAtLeast('Bot API 6.1');
+    isDefinedVersion = telegram.isVersionAtLeast('Bot API 6.1');
+    setState(() {});
+  }
+
+  void onInsetChanged() {
     setState(() {});
   }
 
@@ -53,6 +64,7 @@ class _MainScreenState extends State<MainScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: telegram.backgroundColor,
+      appBar: TeleAppbar(title: 'Flutter Telegram Demo', top: safeAreaTop),
       body: ListView(
         padding: const EdgeInsets.all(8),
         children: [
@@ -75,11 +87,15 @@ class _MainScreenState extends State<MainScreen> {
           InfoExpandableTile('Platform', telegram.platform),
           InfoExpandableTile('Color Scheme', telegram.colorScheme.name),
           ThemeParamsWidget(telegram.themeParams),
+          InfoExpandableTile('isActive', telegram.isActive.toString()),
           InfoExpandableTile('isExpanded', telegram.isExpanded.toString()),
           InfoExpandableTile('viewportHeight', telegram.viewportHeight.toString()),
           InfoExpandableTile('viewportStableHeight', telegram.viewportStableHeight.toString()),
+          InfoExpandableTile('safeAreaInset', telegram.safeAreaInset.toString()),
+          InfoExpandableTile('contentSafeAreaInset', telegram.contentSafeAreaInset.toString()),
           OneColorExpandableTile('headerColor', telegram.headerColor),
           OneColorExpandableTile('backgroundColor', telegram.backgroundColor),
+          OneColorExpandableTile('bottomBarColor', telegram.bottomBarColor),
           InfoExpandableTileWithWidget(
             'Closing confirmation',
             expanded: false,
@@ -97,15 +113,15 @@ class _MainScreenState extends State<MainScreen> {
                   Row(
                     children: [
                       ElevatedButton(
-                          onPressed: () async {
-                            await telegram.enableClosingConfirmation();
+                          onPressed: () {
+                            telegram.enableClosingConfirmation();
                             setState(() {});
                           },
                           child: const Text('Enable')),
                       const SizedBox(width: 16),
                       ElevatedButton(
-                          onPressed: () async {
-                            await telegram.disableClosingConfirmation();
+                          onPressed: () {
+                            telegram.disableClosingConfirmation();
                             setState(() {});
                           },
                           child: const Text('Disable')),
@@ -114,6 +130,41 @@ class _MainScreenState extends State<MainScreen> {
                 ],
               ),
             ),
+          ),
+          ListButton(
+            'Fullscreen',
+            onPress: () {
+              Navigator.of(context)
+                  .push(MaterialPageRoute(builder: (context) => const FullscreenScreen()));
+            },
+          ),
+          ListButton(
+            'Accelerometer',
+            onPress: () {
+              Navigator.of(context)
+                  .push(MaterialPageRoute(builder: (context) => const AccelerometerScreen()));
+            },
+          ),
+          ListButton(
+            'Gyroscope',
+            onPress: () {
+              Navigator.of(context)
+                  .push(MaterialPageRoute(builder: (context) => const GyroscopeScreen()));
+            },
+          ),
+          ListButton(
+            'Orientation',
+            onPress: () {
+              Navigator.of(context)
+                  .push(MaterialPageRoute(builder: (context) => const OrientationScreen()));
+            },
+          ),
+          ListButton(
+            'Emoji Status',
+            onPress: () {
+              Navigator.of(context)
+                  .push(MaterialPageRoute(builder: (context) => const EmojiStatusScreen()));
+            },
           ),
           ListButton(
             'BackButton',
@@ -125,8 +176,21 @@ class _MainScreenState extends State<MainScreen> {
           ListButton(
             'MainButton',
             onPress: () {
-              Navigator.of(context)
-                  .push(MaterialPageRoute(builder: (context) => const MainButtonScreen()));
+              Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => MainButtonScreen(
+                  button: TelegramWebApp.instance.mainButton,
+                ),
+              ));
+            },
+          ),
+          ListButton(
+            'SecondaryButton',
+            onPress: () {
+              Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => MainButtonScreen(
+                  button: TelegramWebApp.instance.secondaryButton,
+                ),
+              ));
             },
           ),
           ListButton(
@@ -164,13 +228,41 @@ class _MainScreenState extends State<MainScreen> {
                   .push(MaterialPageRoute(builder: (context) => const BiometricManagerScreen()));
             },
           ),
+          ListButton(
+            'LocationManager',
+            onPress: () {
+              Navigator.of(context)
+                  .push(MaterialPageRoute(builder: (context) => const LocationManagerScreen()));
+            },
+          ),
+          ListButton(
+            'AddToHomeScreen',
+            onPress: () {
+              Navigator.of(context)
+                  .push(MaterialPageRoute(builder: (context) => const AddToHomeScreen()));
+            },
+          ),
+          ListButton(
+            'DownloadFileScreen',
+            onPress: () {
+              Navigator.of(context)
+                  .push(MaterialPageRoute(builder: (context) => const FileDownloadScreen()));
+            },
+          ),
+          ListButton(
+            'ShareMessageScreen',
+            onPress: () {
+              Navigator.of(context)
+                  .push(MaterialPageRoute(builder: (context) => const ShareMessageScreen()));
+            },
+          ),
           InfoExpandableTile('isVersionAtLeast(6.1)', isDefinedVersion.toString()),
           ListButton(
             'setHeaderColor(color)',
             onPress: () async {
               Color? color = await selectColor(context);
               if (color != null) {
-                await telegram.setHeaderColor(color);
+                telegram.setHeaderColor(color);
                 'Setting color: ${color.hexString}'.showSnackbar(context);
                 await Future.delayed(const Duration(seconds: 2));
                 setState(() {});
@@ -184,7 +276,7 @@ class _MainScreenState extends State<MainScreen> {
             onPress: () async {
               Color? color = await selectColor(context);
               if (color != null) {
-                await telegram.setBackgroundColor(color);
+                telegram.setBackgroundColor(color);
                 'Setting color: ${color.hexString}'.showSnackbar(context);
                 await Future.delayed(const Duration(seconds: 2));
                 setState(() {});
@@ -195,7 +287,7 @@ class _MainScreenState extends State<MainScreen> {
           ),
           ListButton(
             'Open link',
-            onPress: () async {
+            onPress: () {
               telegram.openLink(
                 'https://telegram.org/blog/new-saved-messages-and-9-more',
                 tryInstantView: true,
@@ -204,13 +296,13 @@ class _MainScreenState extends State<MainScreen> {
           ),
           ListButton(
             'Open telegram link',
-            onPress: () async {
+            onPress: () {
               telegram.openTelegramLink('https://t.me/flutter_telegram');
             },
           ),
           ListButton(
             'Show pop',
-            onPress: () async {
+            onPress: () {
               try {
                 telegram.showPopup(
                   title: 'Title',
@@ -230,7 +322,7 @@ class _MainScreenState extends State<MainScreen> {
           ),
           ListButton(
             'Show alert',
-            onPress: () async {
+            onPress: () {
               try {
                 telegram.showAlert(
                   'Sample Alert',
@@ -243,7 +335,7 @@ class _MainScreenState extends State<MainScreen> {
           ),
           ListButton(
             'Show confirm',
-            onPress: () async {
+            onPress: () {
               try {
                 telegram.showConfirm(
                   'Sample Confirm',
@@ -256,7 +348,7 @@ class _MainScreenState extends State<MainScreen> {
           ),
           ListButton(
             'Show scan QR ',
-            onPress: () async {
+            onPress: () {
               try {
                 telegram.showScanQrPopup(
                   'Sample Confirm',
@@ -272,7 +364,7 @@ class _MainScreenState extends State<MainScreen> {
           ),
           ListButton(
             'Read clipboard',
-            onPress: () async {
+            onPress: () {
               telegram.readTextFromClipboard(
                 (result) {
                   'Clipboard text: $result, You can call this method only by MainButton'
@@ -283,7 +375,7 @@ class _MainScreenState extends State<MainScreen> {
           ),
           ListButton(
             'Request write access',
-            onPress: () async {
+            onPress: () {
               telegram.requestWriteAccess(
                 onResult: (result) => 'Write access granted: $result'.showSnackbar(context),
               );
@@ -291,7 +383,7 @@ class _MainScreenState extends State<MainScreen> {
           ),
           ListButton(
             'Request Contact',
-            onPress: () async {
+            onPress: () {
               telegram.requestContact(
                 (result) => 'Contact granted: $result'.showSnackbar(context),
               );
@@ -309,8 +401,8 @@ class _MainScreenState extends State<MainScreen> {
     );
   }
 
-  void showSnackbar(String value) {
+  void showSnackBar(String value) {
     var snackBar = SnackBar(content: Text(value));
-    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    ScaffoldMessenger.maybeOf(context)?.showSnackBar(snackBar);
   }
 }

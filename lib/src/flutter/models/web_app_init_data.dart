@@ -5,8 +5,9 @@ part of '../../../telegram_web_app.dart';
 ///
 /// More details at [Telegram API](https://core.telegram.org/bots/webapps#webappinitdata)
 class WebAppInitData {
-  final telegram_js_models.WebAppInitData _jsInitData;
   WebAppInitData(this._jsInitData);
+
+  final WebAppInitDataJSObject _jsInitData;
 
   /// Optional. A unique identifier for the Mini App session,
   /// required for sending messages via the answerWebAppQuery method.
@@ -19,8 +20,7 @@ class WebAppInitData {
   /// of the current user in the chat where the bot was launched
   /// via the attachment menu. Returned only for private chats
   /// and only for Mini Apps launched via the attachment menu.
-  WebAppUser? get receiver =>
-      _jsInitData.receiver != null ? WebAppUser(_jsInitData.receiver!) : null;
+  WebAppUser? get receiver => _jsInitData.receiver != null ? WebAppUser(_jsInitData.receiver!) : null;
 
   /// Optional. An object containing data about the chat where
   /// the bot was launched via the attachment menu. Returned for
@@ -52,11 +52,15 @@ class WebAppInitData {
   int? get canSendAfter => _jsInitData.can_send_after;
 
   /// Unix time when the form was opened.
-  int? get authDate => _jsInitData.auth_date;
+  int? get authDate => _jsInitData.auth_date == null ? null : int.tryParse(_jsInitData.auth_date!);
 
   /// A hash of all passed parameters, which the bot server can use
-  /// to check their validity.
+  /// to [check their validity](https://core.telegram.org/bots/webapps#validating-data-received-via-the-mini-app).
   String? get hash => _jsInitData.hash;
+
+  /// A signature of all passed parameters (except hash), which the third party can use
+  /// to [check their validity](https://core.telegram.org/bots/webapps#validating-data-for-third-party-use).
+  String? get signature => _jsInitData.signature;
 
   String toReadableString() {
     return """
@@ -69,7 +73,8 @@ class WebAppInitData {
       start_param: $startParam,
       can_send_after: $canSendAfter,
       auth_date: $authDate,
-      hash: $hash
+      hash: $hash,
+      signature: $signature
     """;
   }
 }

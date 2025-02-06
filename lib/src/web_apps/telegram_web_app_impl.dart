@@ -7,47 +7,75 @@ class TelegramWebAppImpl extends TelegramWebApp {
   bool get isSupported => platform.toLowerCase() != "unknown";
 
   @override
-  TelegramInitData get initData => TelegramInitData.fromRawString(telegram_js.initData);
+  TelegramInitData get initData => TelegramInitData.fromRawString(Telegram.WebApp.initData);
 
   @override
-  WebAppInitData? get initDataUnsafe => WebAppInitData(telegram_js.initDataUnsafe);
+  WebAppInitData? get initDataUnsafe => WebAppInitData(Telegram.WebApp.initDataUnsafe);
 
   @override
-  String get version => telegram_js.version;
+  String get version => Telegram.WebApp.version;
 
   @override
-  String get platform => telegram_js.platform;
+  String get platform => Telegram.WebApp.platform;
 
   @override
   TelegramColorScheme get colorScheme =>
-      telegram_js.colorScheme == 'dark' ? TelegramColorScheme.dark : TelegramColorScheme.light;
+      Telegram.WebApp.colorScheme == 'dark' ? TelegramColorScheme.dark : TelegramColorScheme.light;
 
   @override
   ThemeParams get themeParams => ThemeParams.instance;
 
   @override
-  bool get isExpanded => telegram_js.isExpanded;
+  bool get isExpanded => Telegram.WebApp.isExpanded;
 
   @override
-  double? get viewportHeight => telegram_js.viewportHeight;
+  bool get isActive => Telegram.WebApp.isActive;
 
   @override
-  double? get viewportStableHeight => telegram_js.viewportStableHeight;
+  double? get viewportHeight => Telegram.WebApp.viewportHeight;
 
   @override
-  Color? get headerColor => telegram_js.headerColor.toColor();
+  double? get viewportStableHeight => Telegram.WebApp.viewportStableHeight;
 
   @override
-  Color? get backgroundColor => telegram_js.backgroundColor.toColor();
+  Color? get headerColor => Telegram.WebApp.headerColor.toColor();
 
   @override
-  bool get isClosingConfirmationEnabled => telegram_js.isClosingConfirmationEnabled;
+  Color? get backgroundColor => Telegram.WebApp.backgroundColor.toColor();
+
+  @override
+  Color? get bottomBarColor => Telegram.WebApp.bottomBarColor.toColor();
+
+  @override
+  bool get isClosingConfirmationEnabled => Telegram.WebApp.isClosingConfirmationEnabled;
+
+  @override
+  bool get isVerticalSwipesEnabled => Telegram.WebApp.isVerticalSwipesEnabled;
+
+  @override
+  bool get isFullscreen => Telegram.WebApp.isFullscreen;
+
+  @override
+  bool get isOrientationLocked => Telegram.WebApp.isOrientationLocked;
+
+  @override
+  DeviceOrientation get deviceOrientation => DeviceOrientation.instance;
+
+  @override
+  SafeAreaInset get safeAreaInset => SafeAreaInset(Telegram.WebApp.safeAreaInset);
+
+  @override
+  ContentSafeAreaInset get contentSafeAreaInset =>
+      ContentSafeAreaInset(Telegram.WebApp.contentSafeAreaInset);
 
   @override
   BackButton get backButton => BackButton.instance;
 
   @override
-  MainButton get mainButton => MainButton.instance;
+  BottomButton get mainButton => BottomButton(Telegram.WebApp.MainButton);
+
+  @override
+  BottomButton get secondaryButton => BottomButton(Telegram.WebApp.SecondaryButton);
 
   @override
   SettingsButton get settingButton => SettingsButton.instance;
@@ -59,141 +87,228 @@ class TelegramWebAppImpl extends TelegramWebApp {
   CloudStorage get cloudStorage => CloudStorage.instance;
 
   @override
-  BiometricManager get biometricManager => BiometricManager(telegram_js.BiometricManager);
+  Accelerometer get accelerometer => Accelerometer.instance;
 
   @override
-  Future<bool> isVersionAtLeast(String version) => telegram_js.isVersionAtLeast(version);
+  BiometricManager get biometricManager => BiometricManager(Telegram.WebApp.BiometricManager);
 
   @override
-  Future<void> setHeaderColor(Color color) => telegram_js.setHeaderColor(color.hexString);
+  Gyroscope get gyroscope => Gyroscope.instance;
 
   @override
-  Future<void> setBackgroundColor(Color color) => telegram_js.setBackgroundColor(color.hexString);
+  LocationManager get locationManager => LocationManager.instance;
 
   @override
-  Future<void> enableClosingConfirmation() => telegram_js.enableClosingConfirmation();
+  bool isVersionAtLeast(String version) => Telegram.WebApp.isVersionAtLeast(version).toDart;
 
   @override
-  Future<void> disableClosingConfirmation() => telegram_js.disableClosingConfirmation();
+  void setHeaderColor(Color color) => Telegram.WebApp.setHeaderColor(color.hexString);
+
+  @override
+  void setBackgroundColor(Color color) => Telegram.WebApp.setBackgroundColor(color.hexString);
+
+  @override
+  void setBottomBarColor(Color color) => Telegram.WebApp.setBottomBarColor(color.hexString);
+
+  @override
+  void enableClosingConfirmation() => Telegram.WebApp.enableClosingConfirmation();
+
+  @override
+  void disableClosingConfirmation() => Telegram.WebApp.disableClosingConfirmation();
+
+  @override
+  void enableVerticalSwipes() => Telegram.WebApp.enableVerticalSwipes();
+
+  @override
+  void disableVerticalSwipes() => Telegram.WebApp.disableVerticalSwipes();
 
   @override
   void onEvent(TelegramEvent event) =>
-      telegram_js.onEvent(event.eventType.eventName, JsDynamicCallback(event.eventHandler));
+      Telegram.WebApp.onEvent(event.eventType.eventName, JsUtil.toJsFunction(event));
 
   @override
   void offEvent(TelegramEvent event) =>
-      telegram_js.offEvent(event.eventType.eventName, JsDynamicCallback(event.eventHandler));
+      Telegram.WebApp.offEvent(event.eventType.eventName, JsUtil.toJsFunction(event));
 
   @override
-  Future<void> sendData(String data) => telegram_js.sendData(data);
+  void sendData(String data) => Telegram.WebApp.sendData(data);
 
   @override
-  Future<void> switchInlineQuery(String query, [ChatType? chatType]) =>
-      telegram_js.switchInlineQuery(query, chatType?.chatType);
+  void switchInlineQuery(String query, [List<ChatType>? chatTypes]) =>
+      Telegram.WebApp.switchInlineQuery(
+          query, chatTypes?.map((e) => e.chatType.toJS).toList().toJS);
 
   @override
-  Future<void> openLink(String url, {bool tryInstantView = true}) => telegram_js.openLink(
-      url, telegram_js_models.OpenLinkParams(try_instant_view: tryInstantView));
+  void openLink(String url, {bool tryInstantView = true}) => Telegram.WebApp.openLink(
+        url,
+        OpenLinkParamsJSObject(try_instant_view: tryInstantView),
+      );
 
   @override
-  Future<void> openTelegramLink(String url) => telegram_js.openTelegramLink(url);
+  void openTelegramLink(String url) => Telegram.WebApp.openTelegramLink(url);
 
   @override
-  Future<void> openInvoice(String url, [Function(dynamic)? onInvoiceStatus]) =>
-      onInvoiceStatus != null
-          ? telegram_js.openInvoice(url, JsDynamicCallback(onInvoiceStatus))
-          : telegram_js.openInvoice(url);
+  void openInvoice(String url, [void Function(InvoiceStatus status)? onInvoiceStatus]) =>
+      Telegram.WebApp.openInvoice(
+        url,
+        onInvoiceStatus != null
+            ? ((String status) =>
+                onInvoiceStatus.call(InvoiceStatus.values.firstWhere((e) => e.name == status))).toJS
+            : null,
+      );
 
   @override
-  Future<void> shareToStory(
-    String mediaUrl, {
-    StoryShareParams? params,
-  }) {
-    return params != null
-        ? telegram_js.shareToStory(
-            mediaUrl,
-            telegram_js_models.StoryShareParams(
+  void shareToStory(String mediaUrl, {StoryShareParams? params}) {
+    Telegram.WebApp.shareToStory(
+      mediaUrl,
+      params != null
+          ? StoryShareParamsJSObject(
               text: params.text,
               widget_link: params.widgetLink != null
-                  ? telegram_js_models.StoryWidgetLink(
+                  ? StoryWidgetLinkJSObject(
                       url: params.widgetLink!.url,
                       name: params.widgetLink?.name,
                     )
                   : null,
-            ))
-        : telegram_js.shareToStory(mediaUrl);
-  }
-
-  @override
-  Future<void> showPopup({
-    String? title,
-    required String message,
-    List<PopupButton>? buttons,
-    required Function(String id) callback,
-  }) {
-    List<telegram_js_models.PopupButton>? newButtons;
-    if (buttons != null) {
-      newButtons = [];
-      for (var b in buttons) {
-        newButtons.add(telegram_js_models.PopupButton(id: b.id, type: b.type, text: b.text));
-      }
-    }
-    return telegram_js.showPopup(
-      telegram_js_models.PopupParams(title: title, message: message, buttons: newButtons),
-      JsDynamicCallback(callback),
+            )
+          : null,
     );
   }
 
   @override
-  Future<void> showAlert(String message, [Function()? callback]) => callback != null
-      ? telegram_js.showAlert(message, JsDynamicCallback(callback))
-      : telegram_js.showAlert(message);
+  void showPopup({
+    String? title,
+    required String message,
+    List<PopupButton>? buttons,
+    required void Function(String id) callback,
+  }) {
+    List<PopupButtonJSObject>? newButtons;
+    if (buttons != null) {
+      newButtons = [];
+      for (var b in buttons) {
+        newButtons.add(PopupButtonJSObject(id: b.id, type: b.type, text: b.text));
+      }
+    }
+
+    Telegram.WebApp.showPopup(
+      PopupParamsJSObject(title: title, message: message, buttons: newButtons?.toJS),
+      callback.toJS,
+    );
+  }
 
   @override
-  Future<void> showConfirm(String message, [void Function(bool isOkPressed)? callback]) =>
-      callback != null
-          ? telegram_js.showConfirm(message, JsDynamicCallback(callback))
-          : telegram_js.showConfirm(message);
+  void showAlert(String message, [void Function()? callback]) =>
+      Telegram.WebApp.showAlert(message, callback?.toJS);
 
   @override
-  Future<void> showScanQrPopup(String? infoTitle, [bool Function(String result)? callback]) =>
-      callback != null
-          ? telegram_js.showScanQrPopup(
-              telegram_js_models.ScanQrPopupParams(text: infoTitle), JsDynamicCallback(callback))
-          : telegram_js.showScanQrPopup(telegram_js_models.ScanQrPopupParams(text: infoTitle));
+  void showConfirm(String message, [void Function(bool isOkPressed)? callback]) =>
+      Telegram.WebApp.showConfirm(message, callback?.toJS);
 
   @override
-  Future<void> closeScanQrPopup() => telegram_js.closeScanQrPopup();
+  void showScanQrPopup(String? infoTitle, [bool Function(String result)? callback]) =>
+      Telegram.WebApp.showScanQrPopup(
+        ScanQrPopupParamsJSObject(text: infoTitle),
+        callback?.toJS,
+      );
 
   @override
-  Future<void> readTextFromClipboard([Function(String clipboardText)? onRead]) => onRead != null
-      ? telegram_js.readTextFromClipboard(JsDynamicCallback(onRead))
-      : telegram_js.readTextFromClipboard();
+  void closeScanQrPopup() => Telegram.WebApp.closeScanQrPopup();
 
   @override
-  Future<void> requestWriteAccess({required Function(bool granted) onResult}) =>
-      telegram_js.requestWriteAccess(JsDynamicCallback(onResult));
+  void readTextFromClipboard([void Function(String clipboardText)? onRead]) =>
+      Telegram.WebApp.readTextFromClipboard(onRead?.toJS);
 
   @override
-  Future<void> requestContact([Function(bool granted)? onResult]) => onResult != null
-      ? telegram_js.requestContact(JsDynamicCallback(onResult))
-      : telegram_js.requestContact();
+  void requestWriteAccess({required void Function(bool granted) onResult}) =>
+      Telegram.WebApp.requestWriteAccess(onResult.toJS);
 
   @override
-  Future<void> ready() => telegram_js.ready();
+  void requestContact([void Function(bool granted)? onResult]) =>
+      Telegram.WebApp.requestContact(onResult?.toJS);
 
   @override
-  Future<void> expand() => telegram_js.expand();
+  void ready() => Telegram.WebApp.ready();
 
   @override
-  Future<void> close() => telegram_js.close();
+  void expand() => Telegram.WebApp.expand();
 
   @override
-  bool get isVerticalSwipesEnabled => telegram_js.isVerticalSwipesEnabled;
+  void close() => Telegram.WebApp.close();
 
   @override
-  Future<void> enableVerticalSwipes() => telegram_js.enableVerticalSwipes();
+  void requestFullscreen() => Telegram.WebApp.requestFullscreen();
 
   @override
-  Future<void> disableVerticalSwipes() => telegram_js.disableVerticalSwipes();
+  void exitFullscreen() => Telegram.WebApp.exitFullscreen();
+
+  @override
+  void lockOrientation() => Telegram.WebApp.lockOrientation();
+
+  @override
+  void unlockOrientation() => Telegram.WebApp.unlockOrientation();
+
+  @override
+  void addToHomeScreen() => Telegram.WebApp.addToHomeScreen();
+
+  @override
+  Future<String> checkHomeScreenStatus() {
+    final completer = Completer<String>();
+
+    Telegram.WebApp.checkHomeScreenStatus((String status) {
+      completer.complete(status);
+    }.toJS);
+
+    return completer.future;
+  }
+
+  @override
+  Future<bool> downloadFile(String url, String filename) {
+    final completer = Completer<bool>();
+
+    Telegram.WebApp.downloadFile(
+        DownloadFileParamsJSObject(url: url, file_name: filename),
+        (bool status) {
+          completer.complete(status);
+        }.toJS);
+
+    return completer.future;
+  }
+
+  @override
+  Future<bool> shareMessage(String messageId) {
+    final completer = Completer<bool>();
+
+    Telegram.WebApp.shareMessage(
+        messageId,
+        (bool status) {
+          completer.complete(status);
+        }.toJS);
+
+    return completer.future;
+  }
+
+  @override
+  Future<bool> setEmojiStatus(String customEmojiId, {EmojiStatusParams? params}) {
+    final completer = Completer<bool>();
+
+    Telegram.WebApp.setEmojiStatus(
+        customEmojiId,
+        EmojiStatusParamsJSObject(duration: params?.duration),
+        (bool status) {
+          completer.complete(status);
+        }.toJS);
+
+    return completer.future;
+  }
+
+  @override
+  Future<bool> requestEmojiStatusAccess() {
+    final completer = Completer<bool>();
+
+    Telegram.WebApp.requestEmojiStatusAccess((bool status) {
+      completer.complete(status);
+    }.toJS);
+
+    return completer.future;
+  }
 }

@@ -1,3 +1,33 @@
+# Changelog
+
+## 0.3.3
+* Fix wrong event handling [#67](https://github.com/khamidjon-khamidov/flutter_telegram_web_app/pull/67)
+
+## 0.3.2-BETA
+* Make TelegramEvent mockable
+* Bug fix - some events are not working as expected
+
+## 0.3.1
+* [#58](https://github.com/khamidjon-khamidov/flutter_telegram_web_app/issues/58) fix for Flutter 3.27.0. Thanks to `otopba` [#61](https://github.com/khamidjon-khamidov/flutter_telegram_web_app/pull/61)
+
+## 0.3.0
+* BOT API 8.0 full support
+* All remaining apis from 0.2.1 `OlegNovosad` [#51](https://github.com/khamidjon-khamidov/flutter_telegram_web_app/pull/51)
+* Bug fixes
+
+## 0.2.1
+* BOT API 8.0 partial support
+* isActive, isFullscreen, isOrientationLocked, safeAreaInset, contentSafeAreaInset `OlegNovosad` [#43](https://github.com/khamidjon-khamidov/flutter_telegram_web_app/pull/43)
+* lockOrientation, unlockOrientation, isOrientationLocked, DeviceOrientation, deviceOrientationStarted, deviceOrientationStopped, deviceOrientationChanged, deviceOrientationFailed [#46](https://github.com/khamidjon-khamidov/flutter_telegram_web_app/pull/46)
+* activated, contentSafeAreaChanged, deactivated, fullscreenChanged, locationManagerUpdated, fullscreenFailed, locationRequested, safeAreaChanged, requestFullscreen, exitFullscreen, locationManager `OlegNovosad` [#47](https://github.com/khamidjon-khamidov/flutter_telegram_web_app/pull/47)
+* addToHomeScreen, checkHomeScreenStatus, shareMessage, downloadFile, homeScreenAdded, homeScreenChecked, shareMessageSent, shareMessageFailed, fileDownloadRequested [#48](https://github.com/khamidjon-khamidov/flutter_telegram_web_app/pull/48)
+
+## 0.2.0 BETA
+* Added support for Bot API 7.10
+* Fixed incorrect implementation of the TelegramWebApp interface (removed invalid Future<T> return types for several methods)
+* Corrected event implementations and added missing events: `BiometricAuthRequestedEvent`, `BiometricManagerUpdatedEvent`, `BiometricTokenUpdatedEvent`, `ScanQrPopupClosedEvent`, `SecondaryButtonClickedEvent`
+* Migrated to the dart:js_interop package
+
 ## 0.1.6
 * Support for Bot Api 7.8 - shareToStory
 
